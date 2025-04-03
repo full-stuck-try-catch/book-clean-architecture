@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.17.0.82934">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
