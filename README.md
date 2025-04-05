@@ -2,35 +2,35 @@
 
 A comprehensive library management system built with **Clean Architecture**, **Domain-Driven Design (DDD)**, and **CQRS** patterns using **.NET 8**. This system allows users to manage libraries, books, loans, and reviews in a scalable and maintainable way.
 
-## ??? Architecture Overview
+## Architecture Overview
 
 This solution follows **Clean Architecture** principles with clear separation of concerns:
 
 ```
-?? src/
-??? ?? BookLibrary.Domain/          # Core business logic and entities
-??? ?? BookLibrary.Application/     # Use cases and business workflows
-??? ?? BookLibrary.Infrastructure/  # External concerns (Database, Auth, etc.)
-??? ?? BookLibrary.Api/            # API controllers and presentation layer
+src/
+   ├─ BookLibrary.Domain/           # Core business logic and entities
+   ├─ BookLibrary.Application/      # Use cases and business workflows
+   ├─ BookLibrary.Infrastructure/   # External concerns (Database, Auth, etc.)
+   ├─ BookLibrary.Api/              # API controllers and presentation layer
 
-?? test/
-??? ?? BookLibrary.Domain.UnitTests/
-??? ?? BookLibrary.Application.UnitTests/
-??? ?? BookLibrary.Application.IntegrationTests/
-??? ?? BookLibrary.Api.FunctionTests/
-??? ?? BookLibrary.ArchitectureTests/
+test/
+   ├─ BookLibrary.Domain.UnitTests/
+   ├─ BookLibrary.Application.UnitTests/
+   ├─ BookLibrary.Application.IntegrationTests/
+   ├─ BookLibrary.Api.FunctionTests/
+   ├─ BookLibrary.ArchitectureTests/
 ```
 
 ### Key Architectural Patterns
 
-- **?? Clean Architecture**: Dependency inversion and separation of concerns
-- **??? Domain-Driven Design (DDD)**: Rich domain models with business logic
-- **?? CQRS**: Command Query Responsibility Segregation with MediatR
-- **?? Repository Pattern**: Data access abstraction
-- **?? Unit of Work**: Transaction management
-- **?? Result Pattern**: Functional error handling
+- ** Clean Architecture**: Dependency inversion and separation of concerns
+- ** Domain-Driven Design (DDD)**: Rich domain models with business logic
+- ** CQRS**: Command Query Responsibility Segregation with MediatR
+- ** Repository Pattern**: Data access abstraction
+- ** Unit of Work**: Transaction management
+- ** Result Pattern**: Functional error handling
 
-## ?? Technologies & Frameworks
+## Technologies & Frameworks
 
 ### Backend Stack
 - **.NET 8** - Modern C# application framework
@@ -55,9 +55,9 @@ This solution follows **Clean Architecture** principles with clear separation of
 - **Testcontainers** - Integration testing with real databases
 - **ASP.NET Core Testing** - API functional testing
 
-## ?? Features
+## Features
 
-### ?? Core Functionality
+### Core Functionality
 - **Library Management**: Create and manage multiple libraries
 - **Book Management**: Add, update, and organize books by library
 - **User Management**: Registration, authentication, and profile management
@@ -65,19 +65,19 @@ This solution follows **Clean Architecture** principles with clear separation of
 - **Review System**: Users can review and rate books
 - **Stock Management**: Track book availability and quantities
 
-### ?? Security & Authentication
+### Security & Authentication
 - **JWT Authentication**: Secure token-based authentication
 - **Role-based Authorization**: Admin and User roles
 - **Password Hashing**: BCrypt for secure password storage
 - **API Versioning**: Support for multiple API versions
 
-### ?? Monitoring & Logging
+### Monitoring & Logging
 - **Health Checks**: Database and Redis connectivity monitoring
 - **Structured Logging**: Comprehensive logging with Serilog
 - **Request/Response Logging**: Detailed API interaction tracking
 - **Error Handling**: Global exception handling middleware
 
-## ??? Getting Started
+## Getting Started
 
 ### Prerequisites
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
@@ -136,7 +136,7 @@ This solution follows **Clean Architecture** principles with clear separation of
    dotnet run
    ```
 
-## ?? API Documentation
+## API Documentation
 
 ### Authentication Endpoints
 ```http
@@ -184,7 +184,7 @@ DELETE /api/v1/reviews/{id}           # Delete review
 GET  /api/v1/reviews/books/{bookId}   # Get book reviews
 ```
 
-## ?? Testing
+## Testing
 
 ### Run All Tests
 ```bash
@@ -220,30 +220,30 @@ dotnet test
 - **Arrange-Act-Assert**: Clear test structure
 - **FluentAssertions**: Readable test assertions
 
-## ??? Domain Model
+## Domain Model
 
 ### Core Entities
 
-#### **User** ??
+#### **User**
 - Authentication and profile management
 - Role-based permissions (Admin/User)
 - Book borrowing and return history
 
-#### **Library** ???
+#### **Library**
 - Container for book collections
 - Manages book inventory
 
-#### **Book** ??
+#### **Book**
 - Rich book information (title, author, country)
 - Stock and availability tracking
 - Status management (Available/Borrowed/Deleted)
 
-#### **Loan** ??
+#### **Loan** 
 - Book borrowing transactions
 - Due date management
 - Return tracking
 
-#### **Review** ?
+#### **Review**
 - User feedback on books
 - Rating system (1-5 stars)
 - Comment system
@@ -254,7 +254,7 @@ dotnet test
 - **Author**: Author information encapsulation
 - **LoanPeriod**: Date range validation for loans
 
-## ?? Configuration
+## Configuration
 
 ### Environment Variables
 ```bash
@@ -270,7 +270,7 @@ JwtAuthentication__SecretKey=<your-secret-key>
 - `docker-compose.yml` - Container orchestration
 - `launchSettings.json` - Development profiles
 
-## ?? Monitoring & Observability
+## Monitoring & Observability
 
 ### Health Checks
 - **Database**: PostgreSQL connectivity
@@ -288,7 +288,7 @@ JwtAuthentication__SecretKey=<your-secret-key>
 GET /health                    # Application health status
 ```
 
-## ?? Security Features
+## Security Features
 
 ### Authentication & Authorization
 - **JWT Bearer Tokens**: Stateless authentication
@@ -302,7 +302,7 @@ GET /health                    # Application health status
 - **Input Validation**: FluentValidation rules
 - **Error Handling**: Secure error responses
 
-## ?? Deployment
+## Deployment
 
 ### Docker Deployment
 ```bash
@@ -315,28 +315,6 @@ docker-compose logs -f booklibrary.api
 # Scale services
 docker-compose up -d --scale booklibrary.api=3
 ```
-
-### Production Considerations
-- Use environment-specific configuration
-- Implement proper secrets management
-- Configure SSL certificates
-- Set up monitoring and alerting
-- Database backup and recovery
-- Load balancing for multiple instances
-
-## ?? Contributing
-
-### Development Workflow
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes following the existing patterns
-4. Add tests for new functionality
-5. Ensure all tests pass: `dotnet test`
-6. Run architecture tests: `dotnet test test/BookLibrary.ArchitectureTests`
-7. Commit changes: `git commit -m 'Add amazing feature'`
-8. Push to branch: `git push origin feature/amazing-feature`
-9. Open a Pull Request
-
 ### Code Standards
 - Follow Clean Architecture principles
 - Implement proper error handling with Result pattern
@@ -345,14 +323,7 @@ docker-compose up -d --scale booklibrary.api=3
 - Document public APIs
 - Follow C# coding conventions
 
-### Testing Guidelines
-- Write tests for all business logic
-- Use AAA pattern (Arrange-Act-Assert)
-- Mock external dependencies
-- Test both success and failure scenarios
-- Maintain high test coverage
-
-## ?? Learning Resources
+## Learning Resources
 
 ### Clean Architecture
 - [Clean Architecture by Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
@@ -365,22 +336,8 @@ docker-compose up -d --scale booklibrary.api=3
 ### CQRS & Event Sourcing
 - [CQRS Journey by Microsoft](https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj554200(v=pandp.10))
 - [MediatR Documentation](https://github.com/jbogard/MediatR)
-
-## ?? License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## ?? Support
-
-For questions and support:
-
-1. **Issues**: Create a GitHub issue for bugs or feature requests
-2. **Discussions**: Use GitHub Discussions for questions
-3. **Documentation**: Check the inline code documentation
-4. **Examples**: Review the test projects for usage examples
-
 ---
 
-**Happy Coding! ??**
+**Happy Coding! **
 
-Built with ?? using Clean Architecture and .NET 8
+Built with using Clean Architecture and .NET 8
