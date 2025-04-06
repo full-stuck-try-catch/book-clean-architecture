@@ -16,6 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Book.Domain\Book.Domain.csproj" />
+    <ProjectReference Include="..\BookLibrary.Domain\BookLibrary.Domain.csproj" />
   </ItemGroup>
 </Project>

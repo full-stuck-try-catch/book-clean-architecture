@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Book.Application\Book.Application.csproj" />
-    <ProjectReference Include="..\Book.Infrastructure\Book.Infrastructure.csproj" />
+    <ProjectReference Include="..\BookLibrary.Application\BookLibrary.Application.csproj" />
+    <ProjectReference Include="..\BookLibrary.Infrastructure\BookLibrary.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
