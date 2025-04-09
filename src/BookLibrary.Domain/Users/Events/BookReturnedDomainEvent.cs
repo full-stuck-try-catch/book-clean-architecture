@@ -4,4 +4,4 @@ using BookLibrary.Domain.Loans;
 
 namespace BookLibrary.Domain.Users.Events;
 
-public record BookBorrowedDomainEvent(User User, Book Book, Loan Loan) : IDomainEvent;
+public record BookReturnedDomainEvent(User User, Book Book, Loan Loan) : IDomainEvent;

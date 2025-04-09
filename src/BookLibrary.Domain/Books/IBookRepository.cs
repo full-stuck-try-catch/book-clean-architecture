@@ -4,11 +4,11 @@ namespace BookLibrary.Domain.Books;
 
 public interface IBookRepository
 {
-    Task<Book> GetByIdAsync(Guid id);
+    Task<Book?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    ValueTask<bool> ExistsAsync(BookTitle title, AuthorName author);
+    ValueTask<bool> ExistsAsync(BookTitle title, AuthorName author , CancellationToken cancellationToken);
 
     void Add(Book book);
 
-    void Delete(Book book);
+    void Update(Book book);
 }

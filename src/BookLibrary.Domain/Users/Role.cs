@@ -10,4 +10,9 @@ public sealed class Role : Entity
     {
         Name = name;
     }
+
+    public static Role Create(string name)
+    {
+        return new Role(name);
+    }
 }

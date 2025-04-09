@@ -25,14 +25,14 @@ public class Loan : Entity
         return loan;
     }
 
-    public void MarkAsReturned()
+    public void MarkAsReturned(DateTime returnedAt)
     {
         if (IsReturned)
         {
             throw new InvalidOperationException("Loan already returned.");
         }
 
-        ReturnedAt = DateTime.UtcNow;
+        ReturnedAt = returnedAt;
         RaiseDomainEvent(new LoanReturnedDomainEvent(this));
     }
 

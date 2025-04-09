@@ -4,11 +4,11 @@ namespace BookLibrary.Domain.Libraries;
 
 public interface ILibraryRepository
 {
-    Task<Library> GetByIdAsync(Guid id);
+    Task<Library?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    ValueTask<bool> ExistsAsync(string libraryName);
+    ValueTask<bool> ExistsAsync(string libraryName, CancellationToken cancellationToken);
 
     void Add(Library library);
 
-    void Delete(Library library);
+    void Update(Library library);
 }
