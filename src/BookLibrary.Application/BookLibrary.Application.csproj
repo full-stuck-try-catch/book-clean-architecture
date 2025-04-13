@@ -21,6 +21,5 @@
 
   <ItemGroup>
     <Folder Include="Users\UpdateUser\" />
-    <Folder Include="Users\RegisterUser\" />
   </ItemGroup>
 </Project>

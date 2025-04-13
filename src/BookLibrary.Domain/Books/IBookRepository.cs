@@ -6,7 +6,7 @@ public interface IBookRepository
 {
     Task<Book?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    ValueTask<bool> ExistsAsync(BookTitle title, AuthorName author , CancellationToken cancellationToken);
+    ValueTask<bool> ExistsAsync(BookTitle title, Author author , CancellationToken cancellationToken);
 
     void Add(Book book);
 

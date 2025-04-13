@@ -1,20 +1,24 @@
-﻿using Asp.Versioning;
+﻿using System.Text;
+using Asp.Versioning;
 using BookLibrary.Application.Abstractions.Authentication;
 using BookLibrary.Application.Abstractions.Caching;
 using BookLibrary.Application.Abstractions.Clock;
 using BookLibrary.Application.Abstractions.Data;
 using BookLibrary.Domain.Abstractions;
+using BookLibrary.Domain.Users;
 using BookLibrary.Infrastructure.Authentication;
 using BookLibrary.Infrastructure.Authorization;
 using BookLibrary.Infrastructure.Caching;
 using BookLibrary.Infrastructure.Clock;
 using BookLibrary.Infrastructure.Data;
+using BookLibrary.Infrastructure.Repositories;
 using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Quartz;
 
 namespace BookLibrary.Infrastructure;
@@ -54,6 +58,8 @@ public static class DependencyInjection
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
+        services.AddScoped<IUserRepository, UserRepository>();
+
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         services.AddSingleton<ISqlConnectionFactory>(_ =>
@@ -66,11 +72,20 @@ public static class DependencyInjection
     {
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer();
+            .AddJwtBearer(options =>
+            {
+                JwtAuthenticationOptions jwtSettings = configuration.GetSection("JwtAuthentication").Get<JwtAuthenticationOptions>() ??
+                                                      throw new InvalidOperationException("JwtAuthentication configuration section is missing.");
 
-        services.Configure<JwtAuthenticationOptions>(configuration.GetSection("Authentication"));
-
-        services.ConfigureOptions<JwtBearerOptionsSetup>();
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Issuer)),
+                    ClockSkew = TimeSpan.Zero,
+                };
+            });
 
         services.AddHttpContextAccessor();
 

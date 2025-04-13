@@ -23,7 +23,17 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(user => user.Email)
             .HasMaxLength(400)
-            .HasConversion(email => email.Value, value => new  Email(value));
+            .HasConversion(email => email.Value, value => new Email(value));
+
+        builder.Property(user => user.PasswordHash)
+            .HasConversion(passwordHash => passwordHash.Value, value => new PasswordHash(value));
+
+        builder.Property(u => u.RegisteredAt).IsRequired();
+        builder.Property(u => u.UpdatedAt);
+
+        builder.HasMany(u => u.Loans)
+            .WithOne()
+            .HasForeignKey(l => l.UserId);
 
         builder.HasIndex(user => user.Email).IsUnique();
     }

@@ -4,8 +4,8 @@ using BookLibrary.Application.Exceptions;
 using BookLibrary.Domain.Abstractions;
 using BookLibrary.Domain.Books;
 using BookLibrary.Domain.Libraries;
-using BookLibrary.Domain.LibraryCards;
 using BookLibrary.Domain.Loans;
+using BookLibrary.Domain.Reviews;
 using BookLibrary.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -26,11 +26,11 @@ public sealed class ApplicationDbContext : DbContext, IUnitOfWork, IApplicationD
     }
 
     public DbSet<Library> Libraries { get; private set; }
-    public DbSet<LibraryCard> LibraryCards { get; private set; }
     public DbSet<Book> Books { get; private set; }
     public DbSet<Loan> Loans { get; private set; }
     public DbSet<User> Users { get; private set; }
     public DbSet<Role> Roles { get; private set; }
+    public DbSet<Review> Reviews { get; private set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

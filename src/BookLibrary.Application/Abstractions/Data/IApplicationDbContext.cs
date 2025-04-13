@@ -1,7 +1,7 @@
 ﻿using BookLibrary.Domain.Books;
 using BookLibrary.Domain.Libraries;
-using BookLibrary.Domain.LibraryCards;
 using BookLibrary.Domain.Loans;
+using BookLibrary.Domain.Reviews;
 using BookLibrary.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +13,11 @@ public interface IApplicationDbContext
 
     DbSet<Library> Libraries { get; }
 
-    DbSet<LibraryCard> LibraryCards { get; }
-
     DbSet<Loan> Loans { get; }
 
     DbSet<User> Users { get; }
 
     DbSet<Role> Roles { get; }
+
+    DbSet<Review> Reviews { get; }
 }

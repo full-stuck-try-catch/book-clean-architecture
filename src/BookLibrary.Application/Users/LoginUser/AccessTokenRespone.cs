@@ -1,2 +1,2 @@
 ﻿namespace BookLibrary.Application.Users.LoginUser;
-public sealed record  AccessTokenRespone(string AcessToken);
+public sealed record AccessTokenResponse(string AccessToken);
