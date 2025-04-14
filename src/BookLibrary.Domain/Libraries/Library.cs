@@ -4,7 +4,7 @@ using BookLibrary.Domain.Libraries.Events;
 
 namespace BookLibrary.Domain.Libraries;
 
-public class Library : AggregateRoot
+public sealed class Library : AggregateRoot
 {
     public LibraryName Name { get; private set; }
     private readonly List<Book> _books = new();

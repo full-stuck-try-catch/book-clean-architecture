@@ -4,7 +4,7 @@ using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Domain.Books;
 
-public class Book : Entity
+public sealed class Book : Entity
 {
     public BookTitle Title { get; private set; }
     public Author Author { get; private set; }

@@ -5,6 +5,8 @@ using BookLibrary.Application.Abstractions.Caching;
 using BookLibrary.Application.Abstractions.Clock;
 using BookLibrary.Application.Abstractions.Data;
 using BookLibrary.Domain.Abstractions;
+using BookLibrary.Domain.Books;
+using BookLibrary.Domain.Libraries;
 using BookLibrary.Domain.Users;
 using BookLibrary.Infrastructure.Authentication;
 using BookLibrary.Infrastructure.Authorization;
@@ -59,6 +61,8 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ILibraryRepository, LibraryRepository>();
+        services.AddScoped<IBookRepository, BookRepository>();
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 

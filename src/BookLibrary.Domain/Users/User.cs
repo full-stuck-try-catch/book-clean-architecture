@@ -6,7 +6,7 @@ using BookLibrary.Domain.Users.Events;
 
 namespace BookLibrary.Domain.Users;
 
-public class User : Entity
+public sealed class User : Entity
 {
     private readonly List<Role> _roles = new();
      private readonly List<Loan> _loans = new();

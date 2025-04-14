@@ -4,7 +4,7 @@ using BookLibrary.Domain.Loans.Events;
 
 namespace BookLibrary.Domain.Loans;
 
-public class Loan : Entity
+public sealed class Loan : Entity
 {
     public Guid UserId { get; private set; }
     public Guid BookId { get; private set; }
@@ -34,15 +34,17 @@ public class Loan : Entity
         return Result.Success(loan);
     }
 
-    public void MarkAsReturned(DateTime returnedAt)
+    public Result MarkAsReturned(DateTime returnedAt)
     {
         if (IsReturned)
         {
-            throw new InvalidOperationException("Loan already returned.");
+            return Result.Failure(LoanErrors.LoanAlreadyReturned);
         }
 
         ReturnedAt = returnedAt;
         RaiseDomainEvent(new LoanReturnedDomainEvent(this));
+
+        return Result.Success();
     }
 
     public Result Extend(LoanPeriod extension)

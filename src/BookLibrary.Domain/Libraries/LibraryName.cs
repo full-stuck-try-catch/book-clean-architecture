@@ -1,3 +1,3 @@
 namespace BookLibrary.Domain.Libraries;
 
-public record LibraryName(string Value);
+public sealed record LibraryName(string Value);
