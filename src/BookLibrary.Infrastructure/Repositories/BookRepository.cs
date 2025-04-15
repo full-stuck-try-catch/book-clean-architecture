@@ -1,0 +1,21 @@
+using BookLibrary.Domain.Books;
+using Microsoft.EntityFrameworkCore;
+
+namespace BookLibrary.Infrastructure.Repositories;
+
+internal sealed class BookRepository : Repository<Book>, IBookRepository
+{
+    public BookRepository(ApplicationDbContext dbContext)
+        : base(dbContext)
+    {
+    }
+
+    public async ValueTask<bool> ExistsAsync(BookTitle title, Author author, CancellationToken cancellationToken)
+    {
+        return await DbContext.Set<Book>()
+            .AnyAsync(book => book.Title.Value == title.Value && 
+                             book.Author.AuthorFirstName == author.AuthorFirstName &&
+                             book.Author.AuthorLastName == author.AuthorLastName, 
+                      cancellationToken);
+    }
+}
