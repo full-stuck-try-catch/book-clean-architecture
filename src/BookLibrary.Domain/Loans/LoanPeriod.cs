@@ -1,3 +1,5 @@
+using BookLibrary.Domain.Abstractions;
+
 namespace BookLibrary.Domain.Loans;
 
 public sealed record LoanPeriod
@@ -16,14 +18,16 @@ public sealed record LoanPeriod
         EndDate = endDate;
     }
 
-    public static LoanPeriod Create(DateTime startDate, DateTime endDate)
+    public static Result<LoanPeriod> Create(DateTime startDate, DateTime endDate)
     {
         if (endDate <= startDate)
         {
-            throw new ArgumentException("End date must be after start date.");
+            return Result.Failure<LoanPeriod>(LoanErrors.LoanEndDateInvalid);
         }
 
-        return new LoanPeriod(startDate, endDate);
+        var loanPeriod = new LoanPeriod(startDate, endDate);
+
+        return Result.Success(loanPeriod);
     }
 
     public bool IsOverdue(DateTime currentDate) => currentDate > EndDate;

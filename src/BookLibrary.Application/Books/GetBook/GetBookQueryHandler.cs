@@ -31,8 +31,7 @@ internal sealed class GetBookQueryHandler : IQueryHandler<GetBookQuery, BookResp
             book.LibraryId,
             book.Quantity,
             book.AvailableQuantity,
-            book.Status.ToString(),
-            book.IsAvailable);
+            book.Status.ToString());
 
         return Result.Success(response);
     }

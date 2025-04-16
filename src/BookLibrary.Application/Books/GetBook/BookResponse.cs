@@ -9,5 +9,4 @@ public sealed record BookResponse(
     Guid LibraryId,
     int Quantity,
     int AvailableQuantity,
-    string Status,
-    bool IsAvailable);
+    string Status);

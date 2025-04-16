@@ -1,6 +1,5 @@
 using BookLibrary.Domain.Abstractions;
 using BookLibrary.Domain.Books.Events;
-using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Domain.Books;
 
@@ -33,8 +32,6 @@ public sealed class Book : Entity
 
         return book;
     }
-
-    public bool IsAvailable => Status == BookStatus.Available && AvailableQuantity > 0;
 
     public Result MarkAsBorrowed()
     {

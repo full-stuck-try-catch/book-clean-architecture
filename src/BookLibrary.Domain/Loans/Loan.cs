@@ -12,7 +12,6 @@ public sealed class Loan : Entity
     public DateTime? ReturnedAt { get; private set; }
     public bool IsReturned => ReturnedAt.HasValue;
 
-    // Parameterless constructor for EF Core
     private Loan()
     {
     }
