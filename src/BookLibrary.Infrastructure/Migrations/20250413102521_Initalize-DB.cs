@@ -161,8 +161,8 @@ namespace BookLibrary.Infrastructure.Migrations
                 columns: new[] { "id", "name" },
                 values: new object[,]
                 {
-                    { 1, "User" },
-                    { 2, "Admin" }
+                    { 1, "Admin" },
+                    { 2, "User" }
                 });
 
             migrationBuilder.CreateIndex(

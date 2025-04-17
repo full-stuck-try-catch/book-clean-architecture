@@ -3,6 +3,7 @@ using System;
 using BookLibrary.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookLibrary.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250724143757_Add-Permission-Table")]
+    partial class AddPermissionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,18 +188,6 @@ namespace BookLibrary.Infrastructure.Migrations
                         .HasDatabaseName("ix_permission_name");
 
                     b.ToTable("permission", (string)null);
-
-                    b.HasData(
-                      new
-                      {
-                          Id = 1,
-                          Name = "admins:manage"
-                      },
-                      new
-                      {
-                          Id = 2,
-                          Name = "users:read"
-                      });
                 });
 
             modelBuilder.Entity("BookLibrary.Domain.Users.Role", b =>
@@ -222,13 +213,13 @@ namespace BookLibrary.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Name = "Admin"
+                            Id = 2,
+                            Name = "User"
                         },
                         new
                         {
-                            Id = 2,
-                            Name = "User"
+                            Id = 1,
+                            Name = "Admin"
                         });
                 });
 
