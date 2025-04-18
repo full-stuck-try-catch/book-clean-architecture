@@ -35,7 +35,7 @@ public sealed class Review : Entity
 
         var review = new Review(id, book.Id, userId, comment, rating, createdAt);
 
-        review.RaiseDomainEvent(new ReviewCreatedDomainEvent(review));
+        review.RaiseDomainEvent(new ReviewCreatedDomainEvent(id , userId , comment.Value , rating?.Value));
         return review;
     }
 
