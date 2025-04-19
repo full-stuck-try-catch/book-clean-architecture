@@ -1,4 +1,6 @@
 ﻿using Asp.Versioning;
+using BookLibrary.Application.Books.BorrowBook;
+using BookLibrary.Application.Books.ReturnBook;
 using BookLibrary.Application.Users.GetUserLogged;
 using BookLibrary.Application.Users.LoginUser;
 using BookLibrary.Application.Users.RegisterUser;
@@ -85,6 +87,42 @@ public class UsersController : ControllerBase
             request.UserId,
             request.FirstName,
             request.LastName);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return NoContent();
+    }
+
+    [HttpPost("borrow-book")]
+    [Authorize]
+    public async Task<IActionResult> BorrowBook(
+        BorrowBookUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new BorrowBookCommand(request.BookId, request.StartDate, request.EndDate);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return NoContent();
+    }
+
+    [HttpPost("return-book")]
+    [Authorize]
+    public async Task<IActionResult> ReturnBook(
+        ReturnBookUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new ReturnBookCommand(request.BookId);
 
         Result result = await _sender.Send(command, cancellationToken);
 

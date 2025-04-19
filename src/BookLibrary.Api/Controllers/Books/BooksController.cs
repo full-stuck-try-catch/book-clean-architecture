@@ -1,10 +1,12 @@
 using Asp.Versioning;
 using BookLibrary.Application.Books.AddStock;
+using BookLibrary.Application.Books.BorrowBook;
 using BookLibrary.Application.Books.CreateBook;
 using BookLibrary.Application.Books.GetBook;
 using BookLibrary.Application.Books.MarkBookAsBorrowed;
 using BookLibrary.Application.Books.MarkBookAsDeleted;
 using BookLibrary.Application.Books.MarkBookAsReturned;
+using BookLibrary.Application.Books.ReturnBook;
 using BookLibrary.Domain.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -74,6 +76,42 @@ public class BooksController : ControllerBase
         CancellationToken cancellationToken)
     {
         var command = new AddStockCommand(bookId, request.Count);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return NoContent();
+    }
+
+    [HttpPost("{bookId:guid}/borrow")]
+    public async Task<IActionResult> BorrowBook(
+        Guid bookId,
+        BorrowBookRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new BorrowBookCommand(bookId, request.StartDate, request.EndDate);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return NoContent();
+    }
+
+    [HttpPost("{bookId:guid}/return")]
+    public async Task<IActionResult> ReturnBook(
+        Guid bookId,
+        ReturnBookRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new ReturnBookCommand(bookId);
 
         Result result = await _sender.Send(command, cancellationToken);
 
