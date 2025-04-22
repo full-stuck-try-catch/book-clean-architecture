@@ -4,7 +4,7 @@ using BookLibrary.Domain.Libraries;
 
 namespace BookLibrary.Application.Libraries.CreateLibrary;
 
-internal sealed class CreateLibraryCommandHandler : ICommandHandler<CreateLibraryCommand, Guid>
+public sealed class CreateLibraryCommandHandler : ICommandHandler<CreateLibraryCommand, Guid>
 {
     private readonly ILibraryRepository _libraryRepository;
     private readonly IUnitOfWork _unitOfWork;
