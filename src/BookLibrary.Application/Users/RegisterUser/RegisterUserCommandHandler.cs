@@ -7,7 +7,7 @@ using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Application.Users.RegisterUser;
 
-internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Guid>
+public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Guid>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;

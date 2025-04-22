@@ -3,8 +3,7 @@ using BookLibrary.Domain.Abstractions;
 using BookLibrary.Domain.Books;
 
 namespace BookLibrary.Application.Books.MarkBookAsReturned;
-
-internal sealed class MarkBookAsReturnedCommandHandler : ICommandHandler<MarkBookAsReturnedCommand>
+public sealed class MarkBookAsReturnedCommandHandler : ICommandHandler<MarkBookAsReturnedCommand>
 {
     private readonly IBookRepository _bookRepository;
     private readonly IUnitOfWork _unitOfWork;

@@ -7,7 +7,7 @@ using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Application.Books.ReturnBook;
 
-internal sealed class ReturnBookCommandHandler : ICommandHandler<ReturnBookCommand>
+public sealed class ReturnBookCommandHandler : ICommandHandler<ReturnBookCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly IBookRepository _bookRepository;

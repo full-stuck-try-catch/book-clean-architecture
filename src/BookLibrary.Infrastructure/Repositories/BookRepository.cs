@@ -10,6 +10,13 @@ internal sealed class BookRepository : Repository<Book>, IBookRepository
     {
     }
 
+    public async Task<List<Book>> GetByLibraryIdAsync(Guid libraryId, CancellationToken cancellationToken)
+    {
+        return await DbContext.Set<Book>()
+            .Where(book => book.LibraryId == libraryId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async ValueTask<bool> ExistsAsync(BookTitle title, Author author, CancellationToken cancellationToken)
     {
         return await DbContext.Set<Book>()

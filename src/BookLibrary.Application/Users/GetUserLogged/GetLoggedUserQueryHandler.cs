@@ -5,7 +5,7 @@ using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Application.Users.GetUserLogged;
 
-internal sealed class GetLoggedUserQueryHandler : IQueryHandler<GetLoggedUserQuery, UserResponse>
+public sealed class GetLoggedUserQueryHandler : IQueryHandler<GetLoggedUserQuery, UserResponse>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUserContext _userContext;

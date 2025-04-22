@@ -4,7 +4,7 @@ using BookLibrary.Domain.Books;
 
 namespace BookLibrary.Application.Books.MarkBookAsBorrowed;
 
-internal sealed class MarkBookAsBorrowedCommandHandler : ICommandHandler<MarkBookAsBorrowedCommand>
+public sealed class MarkBookAsBorrowedCommandHandler : ICommandHandler<MarkBookAsBorrowedCommand>
 {
     private readonly IBookRepository _bookRepository;
     private readonly IUnitOfWork _unitOfWork;

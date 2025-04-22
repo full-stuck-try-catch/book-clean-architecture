@@ -5,7 +5,7 @@ using BookLibrary.Domain.Libraries;
 
 namespace BookLibrary.Application.Books.CreateBook;
 
-internal sealed class CreateBookCommandHandler : ICommandHandler<CreateBookCommand, Guid>
+public sealed class CreateBookCommandHandler : ICommandHandler<CreateBookCommand, Guid>
 {
     private readonly IBookRepository _bookRepository;
     private readonly ILibraryRepository _libraryRepository;

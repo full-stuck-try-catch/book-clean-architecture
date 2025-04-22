@@ -5,7 +5,7 @@ using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Application.Users.UpdateUserProfile;
 
-internal sealed class UpdateUserProfileCommandHandler : ICommandHandler<UpdateUserProfileCommand>
+public sealed class UpdateUserProfileCommandHandler : ICommandHandler<UpdateUserProfileCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly IDateTimeProvider _dateTimeProvider;

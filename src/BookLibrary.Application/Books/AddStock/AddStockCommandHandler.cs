@@ -4,7 +4,7 @@ using BookLibrary.Domain.Books;
 
 namespace BookLibrary.Application.Books.AddStock;
 
-internal sealed class AddStockCommandHandler : ICommandHandler<AddStockCommand>
+public sealed class AddStockCommandHandler : ICommandHandler<AddStockCommand>
 {
     private readonly IBookRepository _bookRepository;
     private readonly IUnitOfWork _unitOfWork;

@@ -8,7 +8,7 @@ using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Application.Books.BorrowBook;
 
-internal sealed class BorrowBookCommandHandler : ICommandHandler<BorrowBookCommand>
+public sealed class BorrowBookCommandHandler : ICommandHandler<BorrowBookCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly IBookRepository _bookRepository;

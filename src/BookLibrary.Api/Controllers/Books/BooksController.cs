@@ -1,12 +1,11 @@
 using Asp.Versioning;
 using BookLibrary.Application.Books.AddStock;
-using BookLibrary.Application.Books.BorrowBook;
 using BookLibrary.Application.Books.CreateBook;
 using BookLibrary.Application.Books.GetBook;
+using BookLibrary.Application.Books.GetBooksByLibrary;
 using BookLibrary.Application.Books.MarkBookAsBorrowed;
 using BookLibrary.Application.Books.MarkBookAsDeleted;
 using BookLibrary.Application.Books.MarkBookAsReturned;
-using BookLibrary.Application.Books.ReturnBook;
 using BookLibrary.Domain.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -69,6 +68,23 @@ public class BooksController : ControllerBase
         return Ok(result.Value);
     }
 
+    [HttpGet("library/{libraryId:guid}")]
+    public async Task<IActionResult> GetBooksByLibrary(
+        Guid libraryId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetBooksByLibraryQuery(libraryId);
+
+        Result<IReadOnlyList<BookResponse>> result = await _sender.Send(query, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return Ok(result.Value);
+    }
+
     [HttpPost("{bookId:guid}/add-stock")]
     public async Task<IActionResult> AddStock(
         Guid bookId,
@@ -76,42 +92,6 @@ public class BooksController : ControllerBase
         CancellationToken cancellationToken)
     {
         var command = new AddStockCommand(bookId, request.Count);
-
-        Result result = await _sender.Send(command, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return NoContent();
-    }
-
-    [HttpPost("{bookId:guid}/borrow")]
-    public async Task<IActionResult> BorrowBook(
-        Guid bookId,
-        BorrowBookRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new BorrowBookCommand(bookId, request.StartDate, request.EndDate);
-
-        Result result = await _sender.Send(command, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return NoContent();
-    }
-
-    [HttpPost("{bookId:guid}/return")]
-    public async Task<IActionResult> ReturnBook(
-        Guid bookId,
-        ReturnBookRequest request,
-        CancellationToken cancellationToken)
-    {
-        var command = new ReturnBookCommand(bookId);
 
         Result result = await _sender.Send(command, cancellationToken);
 

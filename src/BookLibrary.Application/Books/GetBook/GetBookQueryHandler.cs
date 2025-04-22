@@ -4,7 +4,7 @@ using BookLibrary.Domain.Books;
 
 namespace BookLibrary.Application.Books.GetBook;
 
-internal sealed class GetBookQueryHandler : IQueryHandler<GetBookQuery, BookResponse>
+public sealed class GetBookQueryHandler : IQueryHandler<GetBookQuery, BookResponse>
 {
     private readonly IBookRepository _bookRepository;
 

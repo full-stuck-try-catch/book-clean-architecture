@@ -5,7 +5,7 @@ using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Application.Users.LoginUser;
 
-internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, AccessTokenResponse>
+public sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, AccessTokenResponse>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
