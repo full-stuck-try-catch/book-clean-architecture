@@ -32,22 +32,6 @@ internal sealed class LoanRepository : Repository<Loan>, ILoanRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<Loan>> GetActiveLoansAsync(CancellationToken cancellationToken = default)
-    {
-        return await DbContext.Loans
-            .Where(l => l.ReturnedAt == null)
-            .OrderByDescending(l => l.Period.StartDate)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<List<Loan>> GetOverdueLoansAsync(DateTime currentDate, CancellationToken cancellationToken = default)
-    {
-        return await DbContext.Loans
-            .Where(l => l.ReturnedAt == null && l.Period.EndDate < currentDate)
-            .OrderBy(l => l.Period.EndDate)
-            .ToListAsync(cancellationToken);
-    }
-
     public async Task<Loan?> GetActiveLoanByUserAndBookAsync(Guid userId, Guid bookId, CancellationToken cancellationToken = default)
     {
         return await DbContext.Loans

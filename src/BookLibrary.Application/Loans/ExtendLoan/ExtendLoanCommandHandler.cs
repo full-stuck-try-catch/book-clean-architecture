@@ -5,7 +5,7 @@ using BookLibrary.Domain.Loans;
 
 namespace BookLibrary.Application.Loans.ExtendLoan;
 
-internal sealed class ExtendLoanCommandHandler : ICommandHandler<ExtendLoanCommand>
+public sealed class ExtendLoanCommandHandler : ICommandHandler<ExtendLoanCommand>
 {
     private readonly ILoanRepository _loanRepository;
     private readonly IUserContext _userContext;
@@ -39,9 +39,13 @@ internal sealed class ExtendLoanCommandHandler : ICommandHandler<ExtendLoanComma
             return Result.Failure(LoanErrors.NotFound); // Return NotFound for security reasons
         }
 
-        // Create new loan period for extension
+        // Create new loan period for extension - start from current end date
+        Result<LoanPeriod> extensionPeriod = LoanPeriod.Create(loan.Period.EndDate, request.NewEndDate);
 
-        Result<LoanPeriod> extensionPeriod = LoanPeriod.Create(loan.Period.StartDate , request.NewEndDate);
+        if (extensionPeriod.IsFailure)
+        {
+            return extensionPeriod;
+        }
 
         // Extend loan
         Result extendResult = loan.Extend(extensionPeriod.Value);

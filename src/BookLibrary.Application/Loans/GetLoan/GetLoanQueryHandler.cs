@@ -5,7 +5,7 @@ using BookLibrary.Domain.Loans;
 
 namespace BookLibrary.Application.Loans.GetLoan;
 
-internal sealed class GetLoanQueryHandler : IQueryHandler<GetLoanQuery, LoanResponse>
+public sealed class GetLoanQueryHandler : IQueryHandler<GetLoanQuery, LoanResponse>
 {
     private readonly ILoanRepository _loanRepository;
     private readonly IUserContext _userContext;

@@ -7,7 +7,7 @@ using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Application.Loans.CreateLoan;
 
-internal sealed class CreateLoanCommandHandler : ICommandHandler<CreateLoanCommand, Guid>
+public sealed class CreateLoanCommandHandler : ICommandHandler<CreateLoanCommand, Guid>
 {
     private readonly ILoanRepository _loanRepository;
     private readonly IUserRepository _userRepository;

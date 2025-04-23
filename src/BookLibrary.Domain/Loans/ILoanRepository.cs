@@ -10,10 +10,6 @@ public interface ILoanRepository
 
     Task<List<Loan>> GetActiveLoansByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
 
-    Task<List<Loan>> GetActiveLoansAsync(CancellationToken cancellationToken = default);
-
-    Task<List<Loan>> GetOverdueLoansAsync(DateTime currentDate, CancellationToken cancellationToken = default);
-
     Task<Loan?> GetActiveLoanByUserAndBookAsync(Guid userId, Guid bookId, CancellationToken cancellationToken = default);
 
     void Add(Loan loan);

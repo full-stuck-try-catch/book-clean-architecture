@@ -1,14 +1,10 @@
 using Asp.Versioning;
 using BookLibrary.Application.Loans.CreateLoan;
-using BookLibrary.Application.Loans.ReturnLoan;
 using BookLibrary.Application.Loans.ExtendLoan;
 using BookLibrary.Application.Loans.GetLoan;
 using BookLibrary.Application.Loans.GetUserLoans;
-using BookLibrary.Application.Loans.GetUserActiveLoans;
-using BookLibrary.Application.Loans.GetAllActiveLoans;
-using BookLibrary.Application.Loans.GetOverdueLoans;
+using BookLibrary.Application.Loans.ReturnLoan;
 using BookLibrary.Domain.Abstractions;
-using BookLibrary.Infrastructure.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -109,53 +105,6 @@ public class LoansController : ControllerBase
         var query = new GetUserLoansQuery();
 
         Result<List<UsersLoanResponse>> result = await _sender.Send(query, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
-    }
-
-    [HttpGet("my-active-loans")]
-    public async Task<IActionResult> GetMyActiveLoans(CancellationToken cancellationToken)
-    {
-        var query = new GetUserActiveLoansQuery();
-
-        Result<List<LoanUserActiveResponse>> result = await _sender.Send(query, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
-    }
-
-    [HttpGet("active")]
-    [HasPermission("loans:read")]
-    public async Task<IActionResult> GetAllActiveLoans(CancellationToken cancellationToken)
-    {
-        var query = new GetAllActiveLoansQuery();
-
-        Result<List<LoanActiveResponse>> result = await _sender.Send(query, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
-    }
-
-    [HttpGet("overdue")]
-    [HasPermission("loans:read")]
-    public async Task<IActionResult> GetOverdueLoans(CancellationToken cancellationToken)
-    {
-        var query = new GetOverdueLoansQuery();
-
-        Result<List<LoanOverdueResponse>> result = await _sender.Send(query, cancellationToken);
 
         if (result.IsFailure)
         {

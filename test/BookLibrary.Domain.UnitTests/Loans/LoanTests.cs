@@ -18,11 +18,11 @@ public class LoanTests : BaseTest
         LoanPeriod period = LoanData.CreateLoanPeriod();
 
         // Act
-        var result = Loan.Create(id, userId, bookId, period);
+        Result<Loan> result = Loan.Create(id, userId, bookId, period);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        var loan = result.Value;
+        Loan loan = result.Value;
         loan.Id.Should().Be(id);
         loan.UserId.Should().Be(userId);
         loan.BookId.Should().Be(bookId);

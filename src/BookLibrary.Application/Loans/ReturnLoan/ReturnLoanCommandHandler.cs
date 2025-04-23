@@ -6,7 +6,7 @@ using BookLibrary.Domain.Loans;
 
 namespace BookLibrary.Application.Loans.ReturnLoan;
 
-internal sealed class ReturnLoanCommandHandler : ICommandHandler<ReturnLoanCommand>
+public sealed class ReturnLoanCommandHandler : ICommandHandler<ReturnLoanCommand>
 {
     private readonly ILoanRepository _loanRepository;
     private readonly IBookRepository _bookRepository;
