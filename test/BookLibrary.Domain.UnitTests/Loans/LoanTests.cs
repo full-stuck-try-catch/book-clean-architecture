@@ -40,7 +40,7 @@ public class LoanTests : BaseTest
         LoanPeriod period = LoanData.CreateLoanPeriod();
 
         // Act
-        var loan = Loan.Create(id, userId, bookId, period).Value;
+        Loan loan = Loan.Create(id, userId, bookId, period).Value;
 
         // Assert
         LoanCreatedDomainEvent domainEvent = AssertDomainEventWasPublished<LoanCreatedDomainEvent>(loan);

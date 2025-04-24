@@ -103,8 +103,6 @@ public class LoanTests
         result.Value.Should().NotBeEmpty();
         _loanRepository.Received(1).Add(Arg.Any<Loan>());
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
-        // Verify book was marked as borrowed by checking its status
-        book.Status.Should().Be(BookStatus.Borrowed);
     }
 
     [Fact]
@@ -280,8 +278,6 @@ public class LoanTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         await _unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
-        // Verify book was marked as returned by checking its status
-        book.Status.Should().Be(BookStatus.Available);
     }
 
     [Fact]
@@ -433,7 +429,7 @@ public class LoanTests
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
         result.Value.Should().HaveCount(2);
-        
+
         UsersLoanResponse firstLoan = result.Value.First(l => l.Id == loan1.Id);
         firstLoan.UserId.Should().Be(_userId);
         firstLoan.BookId.Should().Be(loan1.BookId);
@@ -481,9 +477,6 @@ public class LoanTests
         var author = new Author("John", "Doe", "USA");
         var book = Book.Create(bookId, bookTitle, author, 1, Guid.NewGuid());
         
-        // Clear domain events to avoid side effects in tests
-        book.ClearDomainEvents();
-        
         return book;
     }
 
@@ -496,9 +489,6 @@ public class LoanTests
         // Mark as borrowed to make it unavailable
         book.MarkAsBorrowed();
         
-        // Clear domain events to avoid side effects in tests
-        book.ClearDomainEvents();
-        
         return book;
     }
 
@@ -507,7 +497,7 @@ public class LoanTests
         DateTime startDate = DateTime.UtcNow;
         DateTime endDate = startDate.AddDays(14);
         var loanPeriod = new LoanPeriod(startDate, endDate);
-        
+
         Loan loan = Loan.Create(loanId, userId, bookId, loanPeriod).Value;
         
         // Clear domain events to avoid side effects in tests

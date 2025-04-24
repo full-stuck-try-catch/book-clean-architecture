@@ -5,7 +5,7 @@ using BookLibrary.Domain.Reviews;
 
 namespace BookLibrary.Application.Reviews.DeleteReview;
 
-internal sealed class DeleteReviewCommandHandler : ICommandHandler<DeleteReviewCommand>
+public sealed class DeleteReviewCommandHandler : ICommandHandler<DeleteReviewCommand>
 {
     private readonly IReviewRepository _reviewRepository;
     private readonly IUserContext _userContext;

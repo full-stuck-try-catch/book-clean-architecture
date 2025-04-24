@@ -6,7 +6,7 @@ using BookLibrary.Domain.Reviews;
 
 namespace BookLibrary.Application.Reviews.UpdateReview;
 
-internal sealed class UpdateReviewCommandHandler : ICommandHandler<UpdateReviewCommand>
+public sealed class UpdateReviewCommandHandler : ICommandHandler<UpdateReviewCommand>
 {
     private readonly IReviewRepository _reviewRepository;
     private readonly IUserContext _userContext;

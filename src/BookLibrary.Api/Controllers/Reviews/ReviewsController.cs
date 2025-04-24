@@ -3,7 +3,6 @@ using BookLibrary.Application.Reviews.CreateReview;
 using BookLibrary.Application.Reviews.DeleteReview;
 using BookLibrary.Application.Reviews.GetBookReviews;
 using BookLibrary.Application.Reviews.GetReview;
-using BookLibrary.Application.Reviews.GetUserReviews;
 using BookLibrary.Application.Reviews.UpdateReview;
 using BookLibrary.Domain.Abstractions;
 using MediatR;
@@ -108,23 +107,6 @@ public class ReviewsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var query = new GetBookReviewsQuery(bookId);
-
-        Result<List<ReviewResponse>> result = await _sender.Send(query, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
-    }
-
-    [HttpGet("users/{userId:guid}")]
-    public async Task<IActionResult> GetUserReviews(
-        Guid userId,
-        CancellationToken cancellationToken)
-    {
-        var query = new GetUserReviewsQuery(userId);
 
         Result<List<ReviewResponse>> result = await _sender.Send(query, cancellationToken);
 

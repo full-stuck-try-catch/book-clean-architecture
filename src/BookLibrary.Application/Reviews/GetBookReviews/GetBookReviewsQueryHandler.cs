@@ -5,7 +5,7 @@ using BookLibrary.Domain.Reviews;
 
 namespace BookLibrary.Application.Reviews.GetBookReviews;
 
-internal sealed class GetBookReviewsQueryHandler : IQueryHandler<GetBookReviewsQuery, List<ReviewResponse>>
+public sealed class GetBookReviewsQueryHandler : IQueryHandler<GetBookReviewsQuery, List<ReviewResponse>>
 {
     private readonly IReviewRepository _reviewRepository;
 

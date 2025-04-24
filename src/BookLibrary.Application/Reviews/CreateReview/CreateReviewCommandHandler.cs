@@ -7,7 +7,7 @@ using BookLibrary.Domain.Reviews;
 
 namespace BookLibrary.Application.Reviews.CreateReview;
 
-internal sealed class CreateReviewCommandHandler : ICommandHandler<CreateReviewCommand, Guid>
+public sealed class CreateReviewCommandHandler : ICommandHandler<CreateReviewCommand, Guid>
 {
     private readonly IReviewRepository _reviewRepository;
     private readonly IBookRepository _bookRepository;
