@@ -2,4 +2,4 @@ using BookLibrary.Domain.Abstractions;
 
 namespace BookLibrary.Domain.Books.Events;
 
-public record BookReturnedDomainEvent(Book Book) : IDomainEvent;
+public sealed record BookReturnedDomainEvent(Book Book) : IDomainEvent;

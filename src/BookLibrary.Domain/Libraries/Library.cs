@@ -10,6 +10,8 @@ public sealed class Library : AggregateRoot
     private readonly List<Book> _books = new();
     public IReadOnlyCollection<Book> Books => _books.AsReadOnly();
 
+    private Library() { }
+
     private Library(Guid id, LibraryName name) : base(id)
     {
         Name = name;

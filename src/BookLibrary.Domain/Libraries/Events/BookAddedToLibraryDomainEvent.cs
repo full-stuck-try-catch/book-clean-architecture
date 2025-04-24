@@ -3,4 +3,4 @@ using BookLibrary.Domain.Books;
 
 namespace BookLibrary.Domain.Libraries.Events;
 
-public record BookAddedToLibraryDomainEvent(Book Book) : IDomainEvent;
+public sealed record BookAddedToLibraryDomainEvent(Book Book) : IDomainEvent;

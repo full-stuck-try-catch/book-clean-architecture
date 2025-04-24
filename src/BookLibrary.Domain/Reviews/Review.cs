@@ -17,7 +17,9 @@ public sealed class Review : Entity
 
     public DateTime? UpdatedAt { get; private set; }
 
-    public Review(Guid id, Guid bookId, Guid userId, Comment comment, Rating? rating, DateTime createdAt) : base(id)
+    private Review() { }
+
+    private Review(Guid id, Guid bookId, Guid userId, Comment comment, Rating? rating, DateTime createdAt) : base(id)
     {
         BookId = bookId;
         UserId = userId;
