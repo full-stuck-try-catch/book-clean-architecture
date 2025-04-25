@@ -8,6 +8,7 @@ using BookLibrary.Domain.Abstractions;
 using BookLibrary.Domain.Books;
 using BookLibrary.Domain.Libraries;
 using BookLibrary.Domain.Loans;
+using BookLibrary.Domain.Reviews;
 using BookLibrary.Domain.Users;
 using BookLibrary.Infrastructure.Authentication;
 using BookLibrary.Infrastructure.Authorization;
@@ -65,6 +66,7 @@ public static class DependencyInjection
         services.AddScoped<ILibraryRepository, LibraryRepository>();
         services.AddScoped<IBookRepository, BookRepository>();
         services.AddScoped<ILoanRepository, LoanRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 

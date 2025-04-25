@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  booklibrary.api:
+    image: ${DOCKER_REGISTRY-}booklibraryapi
+    container_name: BookLibrary.Api
+    build:
+      context: .
+      dockerfile: src/BookLibrary.Api/Dockerfile
+    depends_on:
+      - booklibrary-db
+  
+  booklibrary-db:
+    image: postgres:latest
+    container_name: BookLibrary.Db
+    environment:
+      - POSTGRES_DB=BookLibraryDB1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1123456789
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  booklibrary-seq:
+    image: datalust/seq:latest
+    container_name: BookLibrary.Seq
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORD=YourStrongAdminPasswordHere
+    ports:
+      - 5341:5341
+      - 8081:80
+
+  booklibrary-redis:
+    image: redis:latest
+    container_name: BookLibrary.Redis
+    restart: always
+    ports:
+      - '6379:6379'
+
