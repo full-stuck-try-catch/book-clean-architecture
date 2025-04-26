@@ -1,5 +1,6 @@
 using BookLibrary.Application.Abstractions.Authentication;
 using BookLibrary.Application.Abstractions.Clock;
+using BookLibrary.Application.Abstractions.Data;
 using BookLibrary.Application.Abstractions.Messaging;
 using BookLibrary.Domain.Abstractions;
 using BookLibrary.Domain.Shared;
@@ -9,17 +10,20 @@ namespace BookLibrary.Application.Users.RegisterUser;
 
 public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Guid>
 {
+    private readonly IApplicationDbContext _applicationDbContext;
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IUnitOfWork _unitOfWork;
 
     public RegisterUserCommandHandler(
+        IApplicationDbContext applicationDbContext,
         IUserRepository userRepository,
         IPasswordHasher passwordHasher,
         IDateTimeProvider dateTimeProvider,
         IUnitOfWork unitOfWork)
     {
+         _applicationDbContext = applicationDbContext;
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _dateTimeProvider = dateTimeProvider;
@@ -48,7 +52,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
         }
 
         // Create value objects
-        var email = Email.Create(request.Email);
+        var email =new Email(request.Email);
         var firstName = new FirstName(request.FirstName);
         var lastName = new LastName(request.LastName);
 
@@ -64,11 +68,24 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
             new PasswordHash(passwordHash),
             _dateTimeProvider.UtcNow);
 
+        Role? userRole = await _userRepository.GetUserRole(Role.User.Name, cancellationToken);
+
+        user.AddRole(userRole);
+
         // Add to repository
         _userRepository.Add(user);
 
+        try
+        {
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception e)
+        {
+
+            throw e;
+        }
         // Save changes
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
 
         return Result.Success(user.Id);
     }

@@ -38,11 +38,18 @@ public sealed class User : Entity
     {
         var user = new User(id, email, firstName, lastName, passwordHash, registeredAt);
 
-        user._roles.Add(Role.User);
-
         user.RaiseDomainEvent(new UserRegisteredDomainEvent(user));
 
         return user;
+    }
+
+    public void AddRole(Role role)
+    {
+        if (_roles.Contains(role))
+        {
+            return;
+        }
+        _roles.Add(role);
     }
 
     public Result Update(FirstName firstName, LastName lastName, DateTime updatedAt)

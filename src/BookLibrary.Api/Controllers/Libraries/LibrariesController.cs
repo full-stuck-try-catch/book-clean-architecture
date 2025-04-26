@@ -8,9 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookLibrary.Api.Controllers.Libraries;
 
+[Authorize]
+[ApiController]
 [ApiVersion(ApiVersions.V1)]
 [Route("api/v{version:apiVersion}/libraries")]
-[Authorize]
 public class LibrariesController : ControllerBase
 {
     private readonly ISender _sender;

@@ -11,9 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookLibrary.Api.Controllers.Loans;
 
+[Authorize]
+[ApiController]
 [ApiVersion(ApiVersions.V1)]
 [Route("api/v{version:apiVersion}/loans")]
-[Authorize]
 public class LoansController : ControllerBase
 {
     private readonly ISender _sender;

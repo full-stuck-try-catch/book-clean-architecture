@@ -1,10 +1,12 @@
-﻿using BookLibrary.Application.Abstractions.Authentication;
+﻿using System.Configuration;
+using System.Security.Claims;
+using System.Text;
+using BookLibrary.Application.Abstractions.Authentication;
 using BookLibrary.Domain.Users;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System.Text;
 
 namespace BookLibrary.Infrastructure.Authentication;
 
@@ -15,9 +17,10 @@ internal sealed class JwtService : IJwtService
 
     public string GenerateToken(User user)
     {
-        string secretKey = _configuration["Jwt:Secret"]!;
+        JwtAuthenticationOptions jwtSettings = _configuration.GetSection("JwtAuthentication").Get<JwtAuthenticationOptions>() ??
+                                                      throw new InvalidOperationException("JwtAuthentication configuration section is missing.");
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
@@ -32,10 +35,10 @@ internal sealed class JwtService : IJwtService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(_configuration.GetValue<int>("Jwt:ExpiresInMinutes")),
+            Expires = DateTime.UtcNow.AddMinutes(jwtSettings.ExpiresInMinutes),
             SigningCredentials = credentials,
-            Issuer = _configuration["Jwt:Issuer"],
-            Audience = _configuration["Jwt:Audience"]
+            Issuer = jwtSettings.Issuer,
+            Audience = jwtSettings.Audience
         };
 
         var handler = new JsonWebTokenHandler();

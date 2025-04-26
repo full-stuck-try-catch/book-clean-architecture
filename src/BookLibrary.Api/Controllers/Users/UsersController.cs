@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookLibrary.Api.Controllers.Users;
 
+[ApiController]
 [ApiVersion(ApiVersions.V1)]
 [Route("api/v{version:apiVersion}/users")]
 public class UsersController : ControllerBase
@@ -23,16 +24,17 @@ public class UsersController : ControllerBase
         _sender = sender;
     }
 
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> RegisterUser(
         RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
         var command = new RegisterUserCommand(
-            request.FirstName,
-            request.LastName,
-            request.Email,
-            request.Password);
+            request.firstName,
+            request.lastName,
+            request.email,
+            request.password);
 
         Result<Guid> result = await _sender.Send(command, cancellationToken);
 
@@ -44,6 +46,7 @@ public class UsersController : ControllerBase
         return Ok(result.Value);
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> LoginUser(
         LoginUserRequest request,

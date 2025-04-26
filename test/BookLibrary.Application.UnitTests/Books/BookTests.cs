@@ -117,7 +117,7 @@ public class BookTests
 
         var user = User.Create(
             userId,
-            Email.Create("test@example.com"),
+            new Email("test@example.com"),
             new FirstName("John"),
             new LastName("Doe"),
             new PasswordHash("hashedPassword"),
@@ -173,7 +173,7 @@ public class BookTests
 
         var user = User.Create(
             userId,
-            Email.Create("test@example.com"),
+            new Email("test@example.com"),
             new FirstName("John"),
             new LastName("Doe"),
             new PasswordHash("hashedPassword"),
@@ -470,7 +470,7 @@ public class BookTests
 
         var user = User.Create(
             userId,
-            Email.Create("test@example.com"),
+            new Email("test@example.com"),
             new FirstName("John"),
             new LastName("Doe"),
             new PasswordHash("hashedPassword"),
@@ -533,7 +533,7 @@ public class BookTests
 
         var user = User.Create(
             userId,
-            Email.Create("test@example.com"),
+            new Email("test@example.com"),
             new FirstName("John"),
             new LastName("Doe"),
             new PasswordHash("hashedPassword"),

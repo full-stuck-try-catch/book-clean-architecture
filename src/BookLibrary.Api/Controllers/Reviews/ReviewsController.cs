@@ -11,9 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookLibrary.Api.Controllers.Reviews;
 
+[Authorize]
+[ApiController]
 [ApiVersion(ApiVersions.V1)]
 [Route("api/v{version:apiVersion}/reviews")]
-[Authorize]
 public class ReviewsController : ControllerBase
 {
     private readonly ISender _sender;

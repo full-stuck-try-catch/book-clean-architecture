@@ -27,7 +27,7 @@ services:
     container_name: BookLibrary.Seq
     environment:
       - ACCEPT_EULA=Y
-      - SEQ_FIRSTRUN_ADMINPASSWORD=YourStrongAdminPasswordHere
+      - SEQ_FIRSTRUN_ADMINPASSWORD=12345678
     ports:
       - 5341:5341
       - 8081:80

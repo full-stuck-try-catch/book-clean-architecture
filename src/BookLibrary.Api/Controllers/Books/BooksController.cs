@@ -8,14 +8,13 @@ using BookLibrary.Application.Books.MarkBookAsDeleted;
 using BookLibrary.Application.Books.MarkBookAsReturned;
 using BookLibrary.Domain.Abstractions;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookLibrary.Api.Controllers.Books;
 
+[ApiController]
 [ApiVersion(ApiVersions.V1)]
 [Route("api/v{version:apiVersion}/books")]
-[Authorize]
 public class BooksController : ControllerBase
 {
     private readonly ISender _sender;

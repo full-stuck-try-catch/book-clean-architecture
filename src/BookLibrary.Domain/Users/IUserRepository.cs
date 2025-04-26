@@ -7,6 +7,8 @@ public interface IUserRepository
 
     Task<bool> IsEmailUniqueAsync(string email, CancellationToken cancellationToken);
 
+    Task<Role?> GetUserRole(string roleName, CancellationToken cancellationToken);
+
     void Add(User user);
 
     void Update(User user);

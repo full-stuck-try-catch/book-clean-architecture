@@ -43,7 +43,7 @@ public class UserTests
         var userId = Guid.NewGuid();
         var user = User.Create(
             userId,
-            Email.Create("test@example.com"),
+            new Email("test@example.com"),
             new FirstName("John"),
             new LastName("Doe"),
             new PasswordHash("hashedPassword"),
@@ -69,7 +69,7 @@ public class UserTests
         var userId = Guid.NewGuid();
         var user = User.Create(
             userId,
-            Email.Create("test@example.com"),
+            new Email("test@example.com"),
             new FirstName("John"),
             new LastName("Doe"),
             new PasswordHash("hashedPassword"),
@@ -110,7 +110,7 @@ public class UserTests
         var userId = Guid.NewGuid();
         var user = User.Create(
             userId,
-            Email.Create("test@example.com"),
+            new Email("test@example.com"),
             new FirstName("John"),
             new LastName("Doe"),
             new PasswordHash("hashedPassword"),
