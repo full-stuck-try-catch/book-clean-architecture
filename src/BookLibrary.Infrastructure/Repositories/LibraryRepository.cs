@@ -10,9 +10,9 @@ internal sealed class LibraryRepository : Repository<Library>, ILibraryRepositor
     {
     }
 
-    public async ValueTask<bool> ExistsAsync(string libraryName, CancellationToken cancellationToken)
+    public async ValueTask<bool> ExistsAsync(LibraryName libraryName, CancellationToken cancellationToken)
     {
         return await DbContext.Set<Library>()
-            .AnyAsync(library => library.Name.Value == libraryName, cancellationToken);
+            .AnyAsync(library => library.Name == libraryName, cancellationToken);
     }
 }

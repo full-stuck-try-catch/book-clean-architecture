@@ -20,7 +20,7 @@ public sealed class CreateLibraryCommandHandler : ICommandHandler<CreateLibraryC
     public async Task<Result<Guid>> Handle(CreateLibraryCommand request, CancellationToken cancellationToken)
     {
         // Validate library name
-        if (string.IsNullOrWhiteSpace(request.Name))
+        if (string.IsNullOrWhiteSpace(request.Name.Value))
         {
             return Result.Failure<Guid>(LibraryErrors.InvalidName);
         }
@@ -33,8 +33,8 @@ public sealed class CreateLibraryCommandHandler : ICommandHandler<CreateLibraryC
         }
 
         // Create library
-        var libraryName = new LibraryName(request.Name);
-        var library = Library.Create(Guid.NewGuid(), libraryName);
+
+        var library = Library.Create(Guid.NewGuid(), request.Name);
 
         // Add to repository
         _libraryRepository.Add(library);

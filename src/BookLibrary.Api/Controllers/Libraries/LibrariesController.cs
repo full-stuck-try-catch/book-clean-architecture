@@ -2,6 +2,7 @@ using Asp.Versioning;
 using BookLibrary.Application.Libraries.AddBookToLibrary;
 using BookLibrary.Application.Libraries.CreateLibrary;
 using BookLibrary.Domain.Abstractions;
+using BookLibrary.Domain.Libraries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public class LibrariesController : ControllerBase
         CreateLibraryRequest request,
         CancellationToken cancellationToken)
     {
-        var command = new CreateLibraryCommand(request.Name);
+        var command = new CreateLibraryCommand(new LibraryName(request.Name));
 
         Result<Guid> result = await _sender.Send(command, cancellationToken);
 

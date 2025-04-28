@@ -21,11 +21,11 @@ public class ReviewTests : BaseTest
         DateTime createdAt = ReviewData.TestCreationDate;
 
         // Act
-        var result = Review.Create(id, book, userId, comment, rating, createdAt);
+        Result<Review> result = Review.Create(id, book, userId, comment, rating, createdAt);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        var review = result.Value;
+        Review review = result.Value;
         review.Id.Should().Be(id);
         review.BookId.Should().Be(book.Id);
         review.UserId.Should().Be(userId);
@@ -46,7 +46,7 @@ public class ReviewTests : BaseTest
         DateTime createdAt = ReviewData.TestCreationDate;
 
         // Act
-        var review = Review.Create(id, book, userId, comment, rating, createdAt).Value;
+        Review review = Review.Create(id, book, userId, comment, rating, createdAt).Value;
 
         // Assert
         ReviewCreatedDomainEvent domainEvent = AssertDomainEventWasPublished<ReviewCreatedDomainEvent>(review);
@@ -68,7 +68,7 @@ public class ReviewTests : BaseTest
         DateTime createdAt = ReviewData.TestCreationDate;
 
         // Act
-        var result = Review.Create(id, book, userId, comment, rating, createdAt);
+        Result<Review> result = Review.Create(id, book, userId, comment, rating, createdAt);
 
         // Assert
         result.IsFailure.Should().BeTrue();

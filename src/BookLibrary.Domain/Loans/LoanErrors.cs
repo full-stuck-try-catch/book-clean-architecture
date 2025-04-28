@@ -10,4 +10,5 @@ public static class LoanErrors
     public static readonly Error LoanAlreadyExists = new("Loan.AlreadyExists", "A loan for this book already exists");
     public static readonly Error NotFound = new("Loan.NotFound", "The loan was not found");
     public static readonly Error LoanEndDateInvalid = new("Loan.EndDateInvalid", "The loan end date is invalid");
+    public static readonly Error LoanStartDateInvalid = new("Loan.StartDateInvalid", "The loan start date is invalid");
 }

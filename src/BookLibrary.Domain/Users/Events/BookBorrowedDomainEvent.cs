@@ -4,4 +4,4 @@ using BookLibrary.Domain.Loans;
 
 namespace BookLibrary.Domain.Users.Events;
 
-public sealed record BookBorrowedDomainEvent(Guid UserId, Book Book, Loan Loan) : IDomainEvent;
+public sealed record BookBorrowedDomainEvent(Guid UserId, Loan Loan) : IDomainEvent;

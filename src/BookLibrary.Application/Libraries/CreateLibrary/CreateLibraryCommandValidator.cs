@@ -6,7 +6,7 @@ internal sealed class CreateLibraryCommandValidator : AbstractValidator<CreateLi
 {
     public CreateLibraryCommandValidator()
     {
-        RuleFor(c => c.Name)
+        RuleFor(c => c.Name.Value)
             .NotEmpty()
             .MaximumLength(200)
             .WithMessage("Library name must not be empty and should not exceed 200 characters.");

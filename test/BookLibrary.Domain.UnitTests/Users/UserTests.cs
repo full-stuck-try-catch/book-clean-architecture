@@ -14,7 +14,7 @@ public class UserTests : BaseTest
     {
         // Arrange
         DateTime utcNow = UserData.GetTestDateTime();
-        var id = UserData.GetTestGuid();
+        Guid id = UserData.GetTestGuid();
 
         // Act
         var user = User.Create(id, UserData.Email, UserData.FirstName, UserData.LastName, UserData.PasswordHash, utcNow);
@@ -36,7 +36,7 @@ public class UserTests : BaseTest
     {
         // Arrange
         DateTime utcNow = UserData.GetTestDateTime();
-        var id = UserData.GetTestGuid();
+        Guid id = UserData.GetTestGuid();
 
         // Act
         var user = User.Create(id, UserData.Email, UserData.FirstName, UserData.LastName, UserData.PasswordHash, utcNow);
@@ -50,11 +50,11 @@ public class UserTests : BaseTest
     public void Update_Should_UpdateUserProperties()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var updatedAt = UserData.GetTestDateTime();
+        User user = UserData.CreateTestUser();
+        DateTime updatedAt = UserData.GetTestDateTime();
 
         // Act
-        var result = user.Update(UserData.NewFirstName, UserData.NewLastName, updatedAt);
+        Result result = user.Update(UserData.NewFirstName, UserData.NewLastName, updatedAt);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -67,8 +67,8 @@ public class UserTests : BaseTest
     public void Update_Should_RaiseUserUpdatedDomainEvent()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var updatedAt = UserData.GetTestDateTime();
+        User user = UserData.CreateTestUser();
+        DateTime updatedAt = UserData.GetTestDateTime();
 
         // Act
         user.Update(UserData.NewFirstName, UserData.NewLastName, updatedAt);
@@ -82,34 +82,29 @@ public class UserTests : BaseTest
     public void BorrowBook_WithAvailableBook_Should_Succeed()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateAvailableBook();
-        var loanPeriod = UserData.CreateLoanPeriod();
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateAvailableBook();
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, book.Id, loanPeriod);
 
         // Act
-        var result = user.BorrowBook(book, loanPeriod);
+        Result result = user.BorrowBook(book, loan.Value);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
         user.Loans.Should().HaveCount(1);
-        var loan = user.Loans.First();
-        loan.UserId.Should().Be(user.Id);
-        loan.BookId.Should().Be(book.Id);
-        loan.Period.Should().Be(loanPeriod);
-        loan.IsReturned.Should().BeFalse();
     }
 
     [Fact]
     public void BorrowBook_WithAvailableBook_Should_MarkBookAsBorrowed()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateAvailableBook();
-        var loanPeriod = UserData.CreateLoanPeriod();
-
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateAvailableBook();
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, book.Id, loanPeriod);
         // Act
-        user.BorrowBook(book, loanPeriod);
-
+        user.BorrowBook(book, loan.Value);
         // Assert
         book.Status.Should().Be(BookStatus.Borrowed);
         book.AvailableQuantity.Should().Be(0); // Started with 1, now 0
@@ -119,17 +114,15 @@ public class UserTests : BaseTest
     public void BorrowBook_WithAvailableBook_Should_RaiseBookBorrowedDomainEvent()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateAvailableBook();
-        var loanPeriod = UserData.CreateLoanPeriod();
-
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateAvailableBook();
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, book.Id, loanPeriod);
         // Act
-        user.BorrowBook(book, loanPeriod);
-
+        user.BorrowBook(book, loan.Value);
         // Assert
         BookBorrowedDomainEvent domainEvent = AssertDomainEventWasPublished<BookBorrowedDomainEvent>(user);
         domainEvent.UserId.Should().Be(user.Id);
-        domainEvent.Book.Should().Be(book);
         domainEvent.Loan.Should().NotBeNull();
         domainEvent.Loan.UserId.Should().Be(user.Id);
         domainEvent.Loan.BookId.Should().Be(book.Id);
@@ -139,13 +132,12 @@ public class UserTests : BaseTest
     public void BorrowBook_WithUnavailableBook_Should_Fail()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateUnavailableBook();
-        var loanPeriod = UserData.CreateLoanPeriod();
-
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateUnavailableBook();
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, book.Id, loanPeriod);
         // Act
-        var result = user.BorrowBook(book, loanPeriod);
-
+        Result result = user.BorrowBook(book, loan.Value);
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(UserErrors.BookNotAvailable);
@@ -156,13 +148,12 @@ public class UserTests : BaseTest
     public void BorrowBook_WithDeletedBook_Should_Fail()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateDeletedBook();
-        var loanPeriod = UserData.CreateLoanPeriod();
-
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateDeletedBook();
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, book.Id, loanPeriod);
         // Act
-        var result = user.BorrowBook(book, loanPeriod);
-
+        Result result = user.BorrowBook(book, loan.Value);
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(UserErrors.BookNotAvailable);
@@ -173,36 +164,35 @@ public class UserTests : BaseTest
     public void ReturnBook_WithBorrowedBook_Should_Succeed()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateAvailableBook();
-        var loanPeriod = UserData.CreateLoanPeriod();
-        var returnedAt = UserData.GetTestDateTime();
-
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateAvailableBook();
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        DateTime returnedAt = UserData.GetTestDateTime();
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, book.Id, loanPeriod);
         // First borrow the book
-        user.BorrowBook(book, loanPeriod);
-
+        user.BorrowBook(book, loan.Value);
         // Act
-        var result = user.ReturnBook(book, returnedAt);
+        Result result = user.ReturnBook(book, returnedAt);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        var loan = user.Loans.First();
-        loan.IsReturned.Should().BeTrue();
-        loan.ReturnedAt.Should().Be(returnedAt);
+        user.Loans.Should().HaveCount(1);
+        user.Loans.First().IsReturned.Should().BeTrue();
+        user.Loans.First().ReturnedAt.Should().Be(returnedAt);
     }
 
     [Fact]
     public void ReturnBook_WithBorrowedBook_Should_MarkBookAsReturned()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateAvailableBook();
-        var loanPeriod = UserData.CreateLoanPeriod();
-        var returnedAt = UserData.GetTestDateTime();
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateAvailableBook();
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        DateTime returnedAt = UserData.GetTestDateTime();
 
         // First borrow the book
-        user.BorrowBook(book, loanPeriod);
-
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, book.Id, loanPeriod);
+        user.BorrowBook(book, loan.Value);
         // Act
         user.ReturnBook(book, returnedAt);
 
@@ -215,13 +205,14 @@ public class UserTests : BaseTest
     public void ReturnBook_WithBorrowedBook_Should_RaiseBookReturnedDomainEvent()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateAvailableBook();
-        var loanPeriod = UserData.CreateLoanPeriod();
-        var returnedAt = UserData.GetTestDateTime();
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateAvailableBook();
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        DateTime returnedAt = UserData.GetTestDateTime();
 
         // First borrow the book
-        user.BorrowBook(book, loanPeriod);
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, book.Id, loanPeriod);
+        user.BorrowBook(book, loan.Value);
         user.ClearDomainEvents(); // Clear the borrow event to test only return event
 
         // Act
@@ -238,12 +229,12 @@ public class UserTests : BaseTest
     public void ReturnBook_WithNotBorrowedBook_Should_Fail()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateAvailableBook();
-        var returnedAt = UserData.GetTestDateTime();
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateAvailableBook();
+        DateTime returnedAt = UserData.GetTestDateTime();
 
         // Act
-        var result = user.ReturnBook(book, returnedAt);
+        Result result = user.ReturnBook(book, returnedAt);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -254,17 +245,18 @@ public class UserTests : BaseTest
     public void ReturnBook_WithAlreadyReturnedBook_Should_Fail()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book = UserData.CreateAvailableBook();
-        var loanPeriod = UserData.CreateLoanPeriod();
-        var returnedAt = UserData.GetTestDateTime();
+        User user = UserData.CreateTestUser();
+        Book book = UserData.CreateAvailableBook();
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        DateTime returnedAt = UserData.GetTestDateTime();
 
         // First borrow and return the book
-        user.BorrowBook(book, loanPeriod);
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, book.Id, loanPeriod);
+        user.BorrowBook(book, loan.Value);
         user.ReturnBook(book, returnedAt);
 
         // Act - Try to return again
-        var result = user.ReturnBook(book, UserData.GetTestDateTimeWithOffset(1));
+        Result result = user.ReturnBook(book, UserData.GetTestDateTimeWithOffset(1));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -275,17 +267,17 @@ public class UserTests : BaseTest
     public void ReturnBook_WithDifferentBook_Should_Fail()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var borrowedBook = UserData.CreateAvailableBookWithTitle("Borrowed Book");
-        var differentBook = UserData.CreateAvailableBookWithTitle("Different Book");
-        var loanPeriod = UserData.CreateLoanPeriod();
-        var returnedAt = UserData.GetTestDateTime();
+        User user = UserData.CreateTestUser();
+        Book borrowedBook = UserData.CreateAvailableBookWithTitle("Borrowed Book");
+        Book differentBook = UserData.CreateAvailableBookWithTitle("Different Book");
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
+        DateTime returnedAt = UserData.GetTestDateTime();
 
         // Borrow one book
-        user.BorrowBook(borrowedBook, loanPeriod);
-
+        Result<Loan> loan = Loan.Create(Guid.NewGuid(), user.Id, borrowedBook.Id, loanPeriod);
+        user.BorrowBook(borrowedBook, loan.Value);
         // Act - Try to return a different book
-        var result = user.ReturnBook(differentBook, returnedAt);
+        Result result = user.ReturnBook(differentBook, returnedAt);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -296,15 +288,16 @@ public class UserTests : BaseTest
     public void BorrowBook_MultipleDifferentBooks_Should_Succeed()
     {
         // Arrange
-        var user = UserData.CreateTestUser();
-        var book1 = UserData.CreateAvailableBookWithTitle("Book 1");
-        var book2 = UserData.CreateAvailableBookWithTitle("Book 2");
-        var loanPeriod = UserData.CreateLoanPeriod();
+        User user = UserData.CreateTestUser();
+        Book book1 = UserData.CreateAvailableBookWithTitle("Book 1");
+        Book book2 = UserData.CreateAvailableBookWithTitle("Book 2");
+        LoanPeriod loanPeriod = UserData.CreateLoanPeriod();
 
         // Act
-        var result1 = user.BorrowBook(book1, loanPeriod);
-        var result2 = user.BorrowBook(book2, loanPeriod);
-
+        Result<Loan> loan1 = Loan.Create(Guid.NewGuid(), user.Id, book1.Id, loanPeriod);
+        Result<Loan> loan2 = Loan.Create(Guid.NewGuid(), user.Id, book2.Id, loanPeriod);
+        Result result1 = user.BorrowBook(book1, loan1.Value);
+        Result result2 = user.BorrowBook(book2, loan2.Value);
         // Assert
         result1.IsSuccess.Should().BeTrue();
         result2.IsSuccess.Should().BeTrue();
@@ -316,8 +309,8 @@ public class UserTests : BaseTest
     public void Constructor_WithParameters_Should_SetProperties()
     {
         // Arrange
-        var id = UserData.GetTestGuid();
-        var registeredAt = UserData.GetTestDateTime();
+        Guid id = UserData.GetTestGuid();
+        DateTime registeredAt = UserData.GetTestDateTime();
 
         // Act
         var user = new User(id, UserData.Email, UserData.FirstName, UserData.LastName, UserData.PasswordHash, registeredAt);

@@ -20,6 +20,11 @@ public sealed record LoanPeriod
 
     public static Result<LoanPeriod> Create(DateTime startDate, DateTime endDate)
     {
+        if(startDate <= DateTime.UtcNow.AddDays(-1))
+        {   
+            return Result.Failure<LoanPeriod>(LoanErrors.LoanStartDateInvalid); 
+        }
+
         if (endDate <= startDate)
         {
             return Result.Failure<LoanPeriod>(LoanErrors.LoanEndDateInvalid);

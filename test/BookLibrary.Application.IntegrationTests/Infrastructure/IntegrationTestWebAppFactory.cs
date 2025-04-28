@@ -1,14 +1,18 @@
 ﻿
+using System.Security.Claims;
 using BookLibrary.Application.Abstractions.Data;
+using BookLibrary.Application.IntegrationTests.Infrastructure;
 using BookLibrary.Infrastructure;
 using BookLibrary.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using NSubstitute;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 
@@ -48,6 +52,28 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
             services.Configure<RedisCacheOptions>(redisCacheOptions =>
                 redisCacheOptions.Configuration = _redisContainer.GetConnectionString());
+
+            // Create fake ClaimsPrincipal
+            Claim[] claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, TestData.TestUserId.ToString()),
+                new Claim(ClaimTypes.Email, TestData.RegisterTestUserRequest.email)
+            };
+
+            var identity = new ClaimsIdentity(claims, "TestAuth");
+            var principal = new ClaimsPrincipal(identity);
+
+            var fakeHttpContext = new DefaultHttpContext
+            {
+                User = principal
+            };
+
+            // Replace IHttpContextAccessor
+            IHttpContextAccessor accessor = Substitute.For<IHttpContextAccessor>();
+            accessor.HttpContext.Returns(fakeHttpContext);
+
+            services.RemoveAll<IHttpContextAccessor>();
+            services.AddSingleton(accessor);
         });
     }
 

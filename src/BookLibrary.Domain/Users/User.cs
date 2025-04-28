@@ -9,7 +9,7 @@ namespace BookLibrary.Domain.Users;
 public sealed class User : Entity
 {
     private readonly List<Role> _roles = new();
-     private readonly List<Loan> _loans = new();
+    private readonly List<Loan> _loans = new();
 
     public IReadOnlyCollection<Role> Roles => _roles.ToList();
     public Email Email { get; private set; }
@@ -63,26 +63,22 @@ public sealed class User : Entity
         return Result.Success();
     }
 
-    public Result BorrowBook(Book book, LoanPeriod period)
+    public Result BorrowBook(Book book, Loan loan)
     {
-
         if (book.Status != BookStatus.Available)
         {
-        return Result.Failure(UserErrors.BookNotAvailable);
+            return Result.Failure(UserErrors.BookNotAvailable);
         }
 
+        if (_loans.Any(l => l.BookId == loan.BookId && !l.IsReturned))
+        {
+            return Result.Failure(UserErrors.LoanAlreadyExists);
+        }
+
+        _loans.Add(loan);
         book.MarkAsBorrowed();
 
-        Result<Loan> loanResult = Loan.Create(Guid.NewGuid(), Id, book.Id, period);
-
-        if (loanResult.IsFailure)
-        {
-            return loanResult;
-        }
-
-        _loans.Add(loanResult.Value);
-
-        RaiseDomainEvent(new BookBorrowedDomainEvent(Id, book, loanResult.Value));
+        RaiseDomainEvent(new BookBorrowedDomainEvent(Id, loan));
 
         return Result.Success();
     }

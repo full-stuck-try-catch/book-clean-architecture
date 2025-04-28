@@ -24,6 +24,7 @@ public class BookTests
     private readonly IBookRepository _bookRepository;
     private readonly ILibraryRepository _libraryRepository;
     private readonly IUserRepository _userRepository;
+    private readonly ILoanRepository _loanRepository;
     private readonly IUserContext _userContext;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IUnitOfWork _unitOfWork;
@@ -45,13 +46,14 @@ public class BookTests
         _bookRepository = Substitute.For<IBookRepository>();
         _libraryRepository = Substitute.For<ILibraryRepository>();
         _userRepository = Substitute.For<IUserRepository>();
+        _loanRepository = Substitute.For<ILoanRepository>();
         _userContext = Substitute.For<IUserContext>();
         _dateTimeProvider = Substitute.For<IDateTimeProvider>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
 
         // Initialize command handlers
         _addStockCommandHandler = new AddStockCommandHandler(_bookRepository, _unitOfWork);
-        _borrowBookCommandHandler = new BorrowBookCommandHandler(_userRepository, _bookRepository, _userContext, _dateTimeProvider, _unitOfWork);
+        _borrowBookCommandHandler = new BorrowBookCommandHandler(_userRepository, _bookRepository, _userContext, _loanRepository, _dateTimeProvider, _unitOfWork);
         _createBookCommandHandler = new CreateBookCommandHandler(_bookRepository, _libraryRepository, _unitOfWork);
         _markBookAsBorrowedCommandHandler = new MarkBookAsBorrowedCommandHandler(_bookRepository, _unitOfWork);
         _markBookAsReturnedCommandHandler = new MarkBookAsReturnedCommandHandler(_bookRepository, _unitOfWork);
@@ -478,20 +480,20 @@ public class BookTests
 
         Result<LoanPeriod> loanPerior = LoanPeriod.Create(DateTime.UtcNow, DateTime.UtcNow.AddDays(7));
 
-        user.BorrowBook(
-            Book.Create(
+        Result<Loan> loan = Loan.Create(
+                Guid.NewGuid(),
+                userId,
+                bookId,
+                loanPerior.Value);
+
+        var book = Book.Create(
                 bookId,
                 new BookTitle("Test Book"),
                 new Author("Jane", "Smith", "UK"),
                 3,
-                Guid.NewGuid()),
-            loanPerior.Value);
-        var book = Book.Create(
-            bookId,
-            new BookTitle("Test Book"),
-            new Author("Jane", "Smith", "UK"),
-            3,
-            Guid.NewGuid());
+                Guid.NewGuid());
+
+        user.BorrowBook(book , loan.Value);
 
         _userContext.UserId.Returns(userId);
         _userRepository.GetByIdAsync(userId, Arg.Any<CancellationToken>()).Returns(user);

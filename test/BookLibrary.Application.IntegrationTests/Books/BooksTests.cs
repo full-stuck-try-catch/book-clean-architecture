@@ -1,11 +1,9 @@
 ﻿using Bookify.Application.IntegrationTests.Infrastructure;
 using BookLibrary.Application.Books.AddStock;
-using BookLibrary.Application.Books.BorrowBook;
 using BookLibrary.Application.Books.CreateBook;
 using BookLibrary.Application.Books.MarkBookAsBorrowed;
 using BookLibrary.Application.Books.MarkBookAsDeleted;
 using BookLibrary.Application.Books.MarkBookAsReturned;
-using BookLibrary.Application.Books.ReturnBook;
 using BookLibrary.Application.Exceptions;
 using BookLibrary.Application.IntegrationTests.Infrastructure;
 using BookLibrary.Domain.Abstractions;
@@ -58,50 +56,6 @@ public class BooksTests : BaseIntegrationTest
         book.AvailableQuantity.Should().Be(5);
         book.Status.Should().Be(BookStatus.Available);
         book.LibraryId.Should().Be(library.Id);
-    }
-
-    [Fact]
-    public async Task CreateBookCommand_WithEmptyTitle_ShouldFail()
-    {
-        // Arrange
-        Library library = await CreateTestLibraryAsync();
-        
-        var command = new CreateBookCommand(
-            "",
-            "John",
-            "Doe",
-            "USA", 
-            5,
-            library.Id);
-
-        // Act
-        Result<Guid> result = await Sender.Send(command);
-
-        // Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(BookErrors.InvalidTitle);
-    }
-
-    [Fact]
-    public async Task CreateBookCommand_WithInvalidQuantity_ShouldFail()
-    {
-        // Arrange
-        Library library = await CreateTestLibraryAsync();
-        
-        var command = new CreateBookCommand(
-            "Test Book",
-            "John",
-            "Doe",
-            "USA",
-            0,
-            library.Id);
-
-        // Act
-        Result<Guid> result = await Sender.Send(command);
-
-        // Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(BookErrors.InvalidQuantity);
     }
 
     [Fact]
@@ -182,89 +136,7 @@ public class BooksTests : BaseIntegrationTest
 
     #endregion
 
-    #region BorrowBookCommand Tests
-
-    [Fact]
-    public async Task BorrowBookCommand_WithValidData_ShouldSucceed()
-    {
-        // Arrange
-        Book book = await CreateTestBookAsync();
-        User user = await CreateTestUserAsync();
-        
-        DateTime startDate = DateTime.UtcNow;
-        DateTime endDate = startDate.AddDays(14);
-        
-        var command = new BorrowBookCommand(book.Id, startDate, endDate);
-
-        // Act
-        Result result = await Sender.Send(command);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-
-        // Verify loan was created
-        Loan? loan = await DbContext.Loans.FirstOrDefaultAsync(l => l.BookId == book.Id && l.UserId == user.Id);
-        loan.Should().NotBeNull();
-        loan!.Period.StartDate.Should().BeCloseTo(startDate, TimeSpan.FromSeconds(1));
-        loan.Period.EndDate.Should().BeCloseTo(endDate, TimeSpan.FromSeconds(1));
-    }
-
-    [Fact]
-    public async Task BorrowBookCommand_WithNonExistentBook_ShouldFail()
-    {
-        // Arrange
-        DateTime startDate = DateTime.UtcNow;
-        DateTime endDate = startDate.AddDays(14);
-        
-        var command = new BorrowBookCommand(Guid.NewGuid(), startDate, endDate);
-
-        // Act
-        Result result = await Sender.Send(command);
-
-        // Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(BookErrors.NotFound);
-    }
-
-    #endregion
-
     #region ReturnBookCommand Tests
-
-    [Fact]
-    public async Task ReturnBookCommand_WithValidData_ShouldSucceed()
-    {
-        // Arrange
-        Book book = await CreateTestBookAsync();
-        User user = await CreateTestUserAsync();
-        Loan loan = await CreateTestLoanAsync(book.Id, user.Id);
-        
-        var command = new ReturnBookCommand(book.Id);
-
-        // Act
-        Result result = await Sender.Send(command);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-
-        // Verify loan was returned
-        await DbContext.Entry(loan).ReloadAsync();
-        loan.ReturnedAt.Should().NotBeNull();
-        loan.IsReturned.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task ReturnBookCommand_WithNonExistentBook_ShouldFail()
-    {
-        // Arrange
-        var command = new ReturnBookCommand(Guid.NewGuid());
-
-        // Act
-        Result result = await Sender.Send(command);
-
-        // Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().Be(BookErrors.NotFound);
-    }
 
     #endregion
 

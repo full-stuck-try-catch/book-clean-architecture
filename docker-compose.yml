@@ -8,21 +8,25 @@ services:
       context: .
       dockerfile: src/BookLibrary.Api/Dockerfile
     depends_on:
-      - booklibrary-db
+      - my-posgresql-db
+    networks:
+      - shared-net
   
-  booklibrary-db:
+  my-posgresql-db:
     image: postgres:latest
     container_name: BookLibrary.Db
     environment:
-      - POSTGRES_DB=BookLibraryDB1
+      - POSTGRES_DB=BookLibraryDB
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=1123456789
+      - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./.containers/database:/var/lib/postgresql/data
+      - /e/docker-volumes/booklibrary-db:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    networks:
+      - shared-net
 
-  booklibrary-seq:
+  my-seq:
     image: datalust/seq:latest
     container_name: BookLibrary.Seq
     environment:
@@ -31,11 +35,17 @@ services:
     ports:
       - 5341:5341
       - 8081:80
+    networks:
+      - shared-net
 
-  booklibrary-redis:
+  my-redis:
     image: redis:latest
     container_name: BookLibrary.Redis
     restart: always
-    ports:
-      - '6379:6379'
+    networks:
+      - shared-net
+
+networks:
+  shared-net:
+    external: true   
 

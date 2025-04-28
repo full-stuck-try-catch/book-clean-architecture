@@ -17,5 +17,6 @@ public static class UserErrors
     public static Error EmailAlreadyInUse => new("User.EmailAlreadyInUse", "The specified email is already in use.");
     public static Error InvalidEmailFormat => new("User.InvalidEmailFormat", "The email format is invalid.");
     public static Error PasswordTooShort => new("User.PasswordTooShort", "The password must be at least 6 characters long.");
+    public static Error LoanAlreadyExists => new("User.LoanAlreadyExists", "A loan for this book already exists.");
 }
 

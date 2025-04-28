@@ -8,14 +8,14 @@ using BookLibrary.Domain.Users;
 
 namespace BookLibrary.Application.Users.RegisterUser;
 
-public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, Guid>
+public sealed class RegisterUserCommandHandlerForTest : ICommandHandler<RegisterUserCommandForTest, Guid>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IUnitOfWork _unitOfWork;
 
-    public RegisterUserCommandHandler(
+    public RegisterUserCommandHandlerForTest(
         IUserRepository userRepository,
         IPasswordHasher passwordHasher,
         IDateTimeProvider dateTimeProvider,
@@ -27,7 +27,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<Guid>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(RegisterUserCommandForTest request, CancellationToken cancellationToken)
     {
         // Validate password length
         if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 6)
@@ -58,7 +58,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 
         // Create user
         var user = User.Create(
-            Guid.NewGuid(),
+            request.UserId,
             email,
             firstName,
             lastName,

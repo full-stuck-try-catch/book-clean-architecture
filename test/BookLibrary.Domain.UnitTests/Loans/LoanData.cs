@@ -27,7 +27,7 @@ internal static class LoanData
 
     public static Loan CreateReturnedLoan()
     {
-        var loan = CreateTestLoan();
+        Loan loan = CreateTestLoan();
         loan.MarkAsReturned(DateTime.UtcNow);
         loan.ClearDomainEvents();
         return loan;

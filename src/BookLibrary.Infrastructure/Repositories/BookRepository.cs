@@ -20,9 +20,9 @@ internal sealed class BookRepository : Repository<Book>, IBookRepository
     public async ValueTask<bool> ExistsAsync(BookTitle title, Author author, CancellationToken cancellationToken)
     {
         return await DbContext.Set<Book>()
-            .AnyAsync(book => book.Title.Value == title.Value && 
-                             book.Author.AuthorFirstName == author.AuthorFirstName &&
-                             book.Author.AuthorLastName == author.AuthorLastName, 
+            .AnyAsync(book => book.Title == title && 
+                             book.Author.AuthorFirstName == author.AuthorFirstName && book.Author.AuthorLastName == author.AuthorLastName
+                             && book.Author.AuthorCountry == author.AuthorCountry, 
                       cancellationToken);
     }
 }

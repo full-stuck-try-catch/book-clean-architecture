@@ -6,7 +6,7 @@ public interface ILibraryRepository
 {
     Task<Library?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    ValueTask<bool> ExistsAsync(string libraryName, CancellationToken cancellationToken);
+    ValueTask<bool> ExistsAsync(LibraryName libraryName, CancellationToken cancellationToken);
 
     void Add(Library library);
 

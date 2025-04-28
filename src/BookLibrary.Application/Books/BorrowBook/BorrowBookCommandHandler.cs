@@ -13,6 +13,7 @@ public sealed class BorrowBookCommandHandler : ICommandHandler<BorrowBookCommand
     private readonly IUserRepository _userRepository;
     private readonly IBookRepository _bookRepository;
     private readonly IUserContext _userContext;
+    private readonly ILoanRepository _loanRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IUnitOfWork _unitOfWork;
 
@@ -20,12 +21,14 @@ public sealed class BorrowBookCommandHandler : ICommandHandler<BorrowBookCommand
         IUserRepository userRepository,
         IBookRepository bookRepository,
         IUserContext userContext,
+        ILoanRepository loanRepository,
         IDateTimeProvider dateTimeProvider,
         IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _bookRepository = bookRepository;
         _userContext = userContext;
+        _loanRepository = loanRepository;
         _dateTimeProvider = dateTimeProvider;
         _unitOfWork = unitOfWork;
     }
@@ -53,12 +56,23 @@ public sealed class BorrowBookCommandHandler : ICommandHandler<BorrowBookCommand
             return loanPeriodResult;
         }
 
+        Result<Loan> loan = Loan.Create(
+           Guid.NewGuid(),
+           user.Id,
+           book.Id,
+           loanPeriodResult.Value);
+
+
         // Borrow the book using domain logic
-        Result borrowResult = user.BorrowBook(book, loanPeriodResult.Value);
+        Result borrowResult = user.BorrowBook(book, loan.Value);
+
         if (borrowResult.IsFailure)
         {
             return borrowResult;
         }
+
+        // Attach the loan to the book
+        _loanRepository.Add(loan.Value);
 
         // Save changes
         await _unitOfWork.SaveChangesAsync(cancellationToken);

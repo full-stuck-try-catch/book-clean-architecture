@@ -36,7 +36,7 @@ public class LibraryTests
     public async Task CreateLibrary_ShouldReturnSuccess_WhenLibraryNameIsValidAndUnique()
     {
         // Arrange
-        string libraryName = "Test Library";
+        var libraryName = new LibraryName("Test Library");
         _libraryRepository.ExistsAsync(libraryName, Arg.Any<CancellationToken>()).Returns(false);
 
         var command = new CreateLibraryCommand(libraryName);
@@ -55,7 +55,7 @@ public class LibraryTests
     public async Task CreateLibrary_ShouldReturnFailure_WhenLibraryNameIsEmpty()
     {
         // Arrange
-        var command = new CreateLibraryCommand("");
+        var command = new CreateLibraryCommand(new LibraryName(""));
 
         // Act
         Result<Guid> result = await _createLibraryCommandHandler.Handle(command, CancellationToken.None);
@@ -71,7 +71,7 @@ public class LibraryTests
     public async Task CreateLibrary_ShouldReturnFailure_WhenLibraryNameIsWhitespace()
     {
         // Arrange
-        var command = new CreateLibraryCommand("   ");
+        var command = new CreateLibraryCommand(new LibraryName("   "));
 
         // Act
         Result<Guid> result = await _createLibraryCommandHandler.Handle(command, CancellationToken.None);
@@ -87,7 +87,7 @@ public class LibraryTests
     public async Task CreateLibrary_ShouldReturnFailure_WhenLibraryNameIsNull()
     {
         // Arrange
-        var command = new CreateLibraryCommand(null!);
+        var command = new CreateLibraryCommand(new LibraryName(null!));
 
         // Act
         Result<Guid> result = await _createLibraryCommandHandler.Handle(command, CancellationToken.None);
@@ -103,7 +103,8 @@ public class LibraryTests
     public async Task CreateLibrary_ShouldReturnFailure_WhenLibraryNameAlreadyExists()
     {
         // Arrange
-        string libraryName = "Existing Library";
+        var libraryName = new LibraryName("Existing Library");
+
         _libraryRepository.ExistsAsync(libraryName, Arg.Any<CancellationToken>()).Returns(true);
 
         var command = new CreateLibraryCommand(libraryName);
